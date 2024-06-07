@@ -3,7 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class FiltroAllIngredientiWidget extends StatefulWidget {
-  const FiltroAllIngredientiWidget({super.key});
+  const FiltroAllIngredientiWidget({
+    required this.function,
+    super.key,
+  });
+
+  final Function function;
 
   @override
   State<FiltroAllIngredientiWidget> createState() =>
@@ -29,6 +34,7 @@ class _FiltroAllIngredientiWidgetState
   }
 
   void searchText() {
+    widget.function(_searchController.text);
     // Provider.of<IngredientiProvider>(context, listen: false).filtraIngredienti(_searchController.text);
   }
 

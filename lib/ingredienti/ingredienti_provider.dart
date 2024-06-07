@@ -6,60 +6,77 @@ import 'package:flutter/material.dart';
 
 enum Status { initial, success, error, loading }
 
-extension StatusX on Status {
-  bool get isInitial => this == Status.initial;
-  bool get isSuccess => this == Status.success;
-  bool get isError => this == Status.error;
-  bool get isLoading => this == Status.loading;
-}
+// extension StatusX on Status {
+//   bool get isInitial => this == Status.initial;
+//   bool get isSuccess => this == Status.success;
+//   bool get isError => this == Status.error;
+//   bool get isLoading => this == Status.loading;
+// }
 
 class IngredientiProvider extends ChangeNotifier {
-  Status statusAllIngredienti = Status.initial;
-  Status statusIngredientiPreferiti = Status.initial;
-  List<IngredientiModel> allIngredienti = [];
-  List<IngredientiModel> ingredientiPreferiti = [];
-  List<IngredientiModel> allIngredientiWithImage = [];
+  Status _statusAllIngredienti = Status.initial;
+  Status _statusIngredientiPreferiti = Status.initial;
+
+  List<IngredientiModel> _ingredientiPreferiti = [];
+  List<IngredientiModel> _allIngredienti = [];
+  List<IngredientiModel> _allIngredientiFiltrati = [];
+
+  Status get statusAllIngredienti => _statusAllIngredienti;
+  Status get statusIngredientiPreferiti => _statusIngredientiPreferiti;
+  List<IngredientiModel> get ingredientiPreferiti => _ingredientiPreferiti;
+  List<IngredientiModel> get allIngredienti => _allIngredienti;
+  List<IngredientiModel> get allIngredientiFiltrati => _allIngredientiFiltrati;
 
   getAllIngredienti() async {
-    statusAllIngredienti = Status.loading;
+    _statusAllIngredienti = Status.loading;
+    _statusIngredientiPreferiti = Status.loading;
     notifyListeners();
     try {
-      allIngredienti = await ingredientiRepository.getAllIngredienti();
-      allIngredientiWithImage = addImageToIngredienti();
-      statusAllIngredienti = Status.success;
+      List<IngredientiModel> allIngredienti =
+          await ingredientiRepository.getAllIngredienti();
+      _allIngredienti = addImageToIngredienti(allIngredienti);
+      _allIngredientiFiltrati = _allIngredienti;
+      _statusAllIngredienti = Status.success;
     } catch (e) {
-      statusAllIngredienti = Status.error;
+      _statusAllIngredienti = Status.error;
     }
     notifyListeners();
     getIngredientiPreferiti();
   }
 
   getIngredientiPreferiti() async {
-    statusIngredientiPreferiti = Status.loading;
     try {
       List<String> ingredientiPreferitiSP =
           await sharedPrefsService.getValue(kIngredientiPreferiti) ?? [];
       if (ingredientiPreferitiSP.isNotEmpty) {
         for (var element in ingredientiPreferitiSP) {
-          final ingrediente = allIngredientiWithImage
+          final ingrediente = _allIngredienti
               .firstWhereOrNull((item) => item.strIngredient1 == element);
           if (ingrediente != null) {
-            ingredientiPreferiti.add(ingrediente);
+            _ingredientiPreferiti.add(ingrediente);
           }
         }
       } else {
-        ingredientiPreferiti = [];
+        _ingredientiPreferiti = [];
       }
-      statusIngredientiPreferiti = Status.success;
+      _statusIngredientiPreferiti = Status.success;
     } catch (e) {
-      statusIngredientiPreferiti = Status.error;
+      _statusIngredientiPreferiti = Status.error;
     }
     notifyListeners();
   }
 
+  filtraIngredienti(String value) async {
+    _allIngredientiFiltrati = _allIngredienti
+        .where(
+            (x) => x.strIngredient1.toLowerCase().contains(value.toLowerCase()))
+        .toList();
+    notifyListeners();
+  }
+
   saveIngredientePreferito(IngredientiModel ingrediente) async {
-    if (!ingredientiPreferiti.contains(ingrediente)) {
-      ingredientiPreferiti.insert(0, ingrediente);
+    if (!_ingredientiPreferiti.contains(ingrediente)) {
+      _ingredientiPreferiti.insert(0, ingrediente);
       List<String> ingredientiPreferitiSP =
           await sharedPrefsService.getValue(kIngredientiPreferiti) ?? [];
 
@@ -68,7 +85,7 @@ class IngredientiProvider extends ChangeNotifier {
           kIngredientiPreferiti, ingredientiPreferitiSP);
       notifyListeners();
     } else {
-      ingredientiPreferiti.remove(ingrediente);
+      _ingredientiPreferiti.remove(ingrediente);
       List<String> ingredientiPreferitiSP =
           await sharedPrefsService.getValue(kIngredientiPreferiti) ?? [];
       ingredientiPreferitiSP.remove(ingrediente.strIngredient1);
@@ -83,10 +100,10 @@ class IngredientiProvider extends ChangeNotifier {
     getIngredientiPreferiti();
   }
 
-  addImageToIngredienti() {
+  addImageToIngredienti(List<IngredientiModel> list) {
     List<IngredientiModel> allIngredientiWithImage = [];
 
-    allIngredienti.forEach((element) {
+    list.forEach((element) {
       String newNameImage = configNameImage(element);
       allIngredientiWithImage.add(
         element.copyWith(

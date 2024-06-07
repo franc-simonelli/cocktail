@@ -1,5 +1,6 @@
 import 'package:cocktail/bootstrap.dart';
-import 'package:cocktail/ingredienti_provider/ingredienti_provider.dart';
+import 'package:cocktail/drink/drink_provider.dart';
+import 'package:cocktail/ingredienti/ingredienti_provider.dart';
 import 'package:cocktail/environment/environment_config.dart';
 import 'package:cocktail/loading/fullscreen_loading_listener.dart';
 import 'package:cocktail/route/go_router_config.dart';
@@ -22,6 +23,9 @@ class WrapperProviders extends StatelessWidget {
     return MultiProvider(providers: [
       ChangeNotifierProvider(
         create: (_) => IngredientiProvider()..getAllIngredienti(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => DrinkProvider(),
       ),
     ], child: const _MyApp());
   }

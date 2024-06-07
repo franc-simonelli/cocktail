@@ -1,9 +1,10 @@
+import 'package:cocktail/constants/image_constants.dart';
 import 'package:cocktail/models/ingredienti_model.dart';
 import 'package:cocktail/shared/widgets/image_shadow.dart';
 import 'package:flutter/material.dart';
 
-class ItemCard extends StatelessWidget {
-  const ItemCard({
+class IngredienteCard extends StatelessWidget {
+  const IngredienteCard({
     super.key,
     required this.item,
     this.isSelect = false,
@@ -61,6 +62,7 @@ class ItemCard extends StatelessWidget {
                   flex: 5,
                   child: ImageShadow(
                     image: item.image!,
+                    imgDefault: kImgRum,
                   ),
                 )
               ],

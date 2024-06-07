@@ -1,5 +1,6 @@
 import 'package:cocktail/environment/environment_config.dart';
 import 'package:cocktail/loading/loading_notifier.dart';
+import 'package:cocktail/repository/drink_repository.dart';
 import 'package:cocktail/repository/ingredienti_repository.dart';
 import 'package:cocktail/service/context_service.dart';
 import 'package:cocktail/service/shared_preferences_service.dart';
@@ -15,3 +16,4 @@ LoadingNotifier get loadingNotifier => GetIt.I.get<LoadingNotifier>();
 EnvironmentConfig get environmentConfig => GetIt.I.get<EnvironmentConfig>();
 IngredientiRepository get ingredientiRepository =>
     GetIt.I.get<IngredientiRepository>();
+DrinkRepository get drinksRepository => GetIt.I.get<DrinkRepository>();

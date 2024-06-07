@@ -1,8 +1,11 @@
 import 'package:cocktail/constants/image_constants.dart';
 import 'package:cocktail/home/widget/circular_menu.dart';
-import 'package:cocktail/ingredienti_provider/ingredienti_provider.dart';
+import 'package:cocktail/ingredienti/ingredienti_provider.dart';
 import 'package:cocktail/home/widget/section_scroll.dart';
+import 'package:cocktail/route/go_router_config.dart';
+import 'package:cocktail/shared/widgets/option_scroll_home.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -111,14 +114,19 @@ class _HomeState extends State<Home> {
                           return SectionScrollIngredienti(
                             title: 'Ingredienti preferiti',
                             lista: provider.ingredientiPreferiti,
-                            showElimina: true,
+                            status: provider.statusIngredientiPreferiti,
                             showAdd: true,
-                            onPress: () {
-                              Provider.of<IngredientiProvider>(context,
-                                      listen: false)
-                                  .removeAllIngredientiPreferiti();
+                            onPressAdd: () {
+                              context.push(ScreenPaths.addFavoriteIngredienti);
                             },
-                            onPressAdd: () {},
+                            widgetOption: OptionScrollHome(
+                              text: 'Elimina',
+                              onPress: () {
+                                Provider.of<IngredientiProvider>(context,
+                                        listen: false)
+                                    .removeAllIngredientiPreferiti();
+                              },
+                            ),
                           );
                         },
                       ),
@@ -127,7 +135,14 @@ class _HomeState extends State<Home> {
                         builder: (ctx, provider, _) {
                           return SectionScrollIngredienti(
                             title: 'Ingredienti',
-                            lista: provider.allIngredientiWithImage,
+                            lista: provider.allIngredientiFiltrati,
+                            status: provider.statusAllIngredienti,
+                            widgetOption: OptionScrollHome(
+                              text: 'Mostra',
+                              onPress: () {
+                                context.push(ScreenPaths.allIngredienti);
+                              },
+                            ),
                           );
                         },
                       ),

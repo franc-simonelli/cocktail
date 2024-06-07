@@ -6,10 +6,12 @@ import 'package:simple_shadow/simple_shadow.dart';
 class ImageShadow extends StatelessWidget {
   const ImageShadow({
     required this.image,
+    required this.imgDefault,
     super.key,
   });
 
   final String image;
+  final String imgDefault;
 
   @override
   Widget build(BuildContext context) {
@@ -23,20 +25,18 @@ class ImageShadow extends StatelessWidget {
         imageBuilder: (context, imageProvider) => Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: imageProvider,
-            ),
+            image: DecorationImage(image: imageProvider),
           ),
         ),
         placeholder: (context, url) => Center(
           child: Image.asset(
-            kImgRum,
+            imgDefault,
             color: Colors.black,
             width: 100,
           ),
         ),
         errorWidget: (context, url, error) => Image.asset(
-          kImgRum,
+          imgDefault,
           color: Colors.black,
         ),
       ),

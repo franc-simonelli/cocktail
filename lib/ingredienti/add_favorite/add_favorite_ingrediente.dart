@@ -1,7 +1,8 @@
-import 'package:cocktail/add_favorite/widget/filtro_all_ingredienti_widget.dart';
+import 'package:cocktail/ingredienti/add_favorite/widget/filtro_all_ingredienti_widget.dart';
 import 'package:cocktail/constants/image_constants.dart';
-import 'package:cocktail/home/widget/item_card.dart';
-import 'package:cocktail/ingredienti_provider/ingredienti_provider.dart';
+import 'package:cocktail/home/widget/ingrediente_card.dart';
+import 'package:cocktail/ingredienti/ingredienti_provider.dart';
+import 'package:cocktail/models/ingredienti_model.dart';
 import 'package:cocktail/shared/widgets/text_shadow.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -47,11 +48,15 @@ class AddFavoriteIngrediente extends StatelessWidget {
                 ),
               ),
             ),
-            bottom: const PreferredSize(
-              preferredSize: Size.fromHeight(50.0),
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(50.0),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: FiltroAllIngredientiWidget(),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: FiltroAllIngredientiWidget(
+                  function:
+                      Provider.of<IngredientiProvider>(context, listen: false)
+                          .filtraIngredienti,
+                ),
               ),
             ),
           ),
@@ -62,31 +67,12 @@ class AddFavoriteIngrediente extends StatelessWidget {
                   builder: (ctx, provider, _) {
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: provider.allIngredienti.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 0.8,
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 20,
-                          mainAxisSpacing: 20,
-                        ),
-                        itemBuilder: (context, index) {
-                          final item = provider.allIngredientiWithImage[index];
-                          final isSelect =
-                              provider.ingredientiPreferiti.contains(item);
-                          return ItemCard(
-                            item: item,
-                            isSelect: isSelect,
-                            onPress: () {
-                              Provider.of<IngredientiProvider>(context,
-                                      listen: false)
-                                  .saveIngredientePreferito(item);
-                            },
-                          );
-                        },
+                      child: GridAddIngredienti(
+                        list: provider.allIngredientiFiltrati,
+                        onPress: Provider.of<IngredientiProvider>(context,
+                                listen: false)
+                            .saveIngredientePreferito,
+                        optionSelect: provider.ingredientiPreferiti,
                       ),
                     );
                   },
@@ -96,6 +82,48 @@ class AddFavoriteIngrediente extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class GridAddIngredienti extends StatelessWidget {
+  const GridAddIngredienti({
+    required this.list,
+    required this.onPress,
+    this.optionSelect,
+    super.key,
+  });
+
+  final List<IngredientiModel> list;
+  final Function onPress;
+  final List<IngredientiModel>? optionSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: list.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        childAspectRatio: 0.8,
+        crossAxisCount: 3,
+        crossAxisSpacing: 20,
+        mainAxisSpacing: 20,
+      ),
+      itemBuilder: (context, index) {
+        final item = list[index];
+        bool isSelect = false;
+        if (optionSelect != null) {
+          isSelect = optionSelect!.contains(item);
+        }
+        return IngredienteCard(
+          item: item,
+          isSelect: isSelect,
+          onPress: () {
+            onPress(item);
+          },
+        );
+      },
     );
   }
 }
