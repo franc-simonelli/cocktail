@@ -75,7 +75,6 @@ class SectionScrollIngredienti extends StatelessWidget {
 
 class _ContentAdd extends StatelessWidget {
   const _ContentAdd({
-    super.key,
     required this.onPressAdd,
   });
 
@@ -92,9 +91,7 @@ class _ContentAdd extends StatelessWidget {
 }
 
 class _ContentLoad extends StatelessWidget {
-  const _ContentLoad({
-    super.key,
-  });
+  const _ContentLoad();
 
   @override
   Widget build(BuildContext context) {

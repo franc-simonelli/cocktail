@@ -2,8 +2,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-class FiltroAllIngredientiWidget extends StatefulWidget {
-  const FiltroAllIngredientiWidget({
+class FiltroWidget extends StatefulWidget {
+  const FiltroWidget({
     required this.function,
     super.key,
   });
@@ -11,12 +11,10 @@ class FiltroAllIngredientiWidget extends StatefulWidget {
   final Function function;
 
   @override
-  State<FiltroAllIngredientiWidget> createState() =>
-      _FiltroAllIngredientiWidgetState();
+  State<FiltroWidget> createState() => _FiltroWidgetState();
 }
 
-class _FiltroAllIngredientiWidgetState
-    extends State<FiltroAllIngredientiWidget> {
+class _FiltroWidgetState extends State<FiltroWidget> {
   final _searchController = TextEditingController();
   Timer? _debounce;
 
@@ -35,7 +33,6 @@ class _FiltroAllIngredientiWidgetState
 
   void searchText() {
     widget.function(_searchController.text);
-    // Provider.of<IngredientiProvider>(context, listen: false).filtraIngredienti(_searchController.text);
   }
 
   @override

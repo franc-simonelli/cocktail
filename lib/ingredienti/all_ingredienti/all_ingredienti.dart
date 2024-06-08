@@ -1,10 +1,11 @@
 import 'package:cocktail/constants/image_constants.dart';
 import 'package:cocktail/drink/drink_provider.dart';
 import 'package:cocktail/home/widget/ingrediente_card.dart';
-import 'package:cocktail/ingredienti/add_favorite/widget/filtro_all_ingredienti_widget.dart';
+import 'package:cocktail/shared/widgets/filtro_widget.dart';
 import 'package:cocktail/ingredienti/ingredienti_provider.dart';
 import 'package:cocktail/models/ingredienti_model.dart';
 import 'package:cocktail/route/go_router_config.dart';
+import 'package:cocktail/shared/widgets/grid_loading.dart';
 import 'package:cocktail/shared/widgets/text_shadow.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -17,11 +18,6 @@ class AllIngredienti extends StatelessWidget {
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
     final appTextTheme = Theme.of(context).textTheme;
-
-    onPr() {
-      Provider.of<DrinkProvider>(context, listen: false).getDrinksByIngrediente;
-      context.push(ScreenPaths.drinks);
-    }
 
     return Scaffold(
       body: CustomScrollView(
@@ -56,10 +52,10 @@ class AllIngredienti extends StatelessWidget {
               ),
             ),
             bottom: PreferredSize(
-              preferredSize: Size.fromHeight(50.0),
+              preferredSize: const Size.fromHeight(50.0),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: FiltroAllIngredientiWidget(
+                child: FiltroWidget(
                   function:
                       Provider.of<IngredientiProvider>(context, listen: false)
                           .filtraIngredienti,
@@ -74,9 +70,13 @@ class AllIngredienti extends StatelessWidget {
                   builder: (ctx, provider, _) {
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: GridAllIngredienti(
-                        list: provider.allIngredientiFiltrati,
-                      ),
+                      child: provider.statusSuccess
+                          ? GridAllIngredienti(
+                              list: provider.allIngredientiFiltrati,
+                            )
+                          : provider.statusLoading
+                              ? const GridLoading()
+                              : const SizedBox.shrink(),
                     );
                   },
                 ),

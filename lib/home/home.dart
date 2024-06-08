@@ -17,6 +17,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    Provider.of<IngredientiProvider>(context, listen: false).resetList();
+    super.initState();
+  }
+
   bool _isMenuOpen = false;
   @override
   Widget build(BuildContext context) {

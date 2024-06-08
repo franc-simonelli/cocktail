@@ -1,7 +1,5 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -36,14 +34,9 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  Alignment alignment1 = Alignment(0.0, 0.9);
-  Alignment alignment2 = Alignment(0.0, 0.9);
-  Alignment alignment3 = Alignment(0.0, 0.9);
+  Alignment alignment1 = const Alignment(0.0, 0.9);
+  Alignment alignment2 = const Alignment(0.0, 0.9);
+  Alignment alignment3 = const Alignment(0.0, 0.9);
   double size1 = 50;
   double size2 = 50;
   double size3 = 50;
@@ -52,7 +45,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
 
-    return Container(
+    return SizedBox(
       // color: Colors.blue,
       height: 250,
       width: 250,
@@ -156,14 +149,14 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                       } else {
                         toggle = !toggle;
                         _controller.reverse();
-                        Future.delayed(Duration(milliseconds: 10), () {
+                        Future.delayed(const Duration(milliseconds: 10), () {
                           alignment1 = const Alignment(0.0, 0.9);
                         });
-                        Future.delayed(Duration(milliseconds: 100), () {
-                          alignment2 = Alignment(0.0, 0.9);
+                        Future.delayed(const Duration(milliseconds: 100), () {
+                          alignment2 = const Alignment(0.0, 0.9);
                         });
-                        Future.delayed(Duration(milliseconds: 200), () {
-                          alignment3 = Alignment(0.0, 0.9);
+                        Future.delayed(const Duration(milliseconds: 200), () {
+                          alignment3 = const Alignment(0.0, 0.9);
                         });
                         size1 = size2 = size3 = 20;
                       }

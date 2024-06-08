@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls
+
 import 'package:cocktail/constants/shared_preferences_constants.dart';
 import 'package:cocktail/core/di/shared_export.dart';
 import 'package:cocktail/models/ingredienti_model.dart';
@@ -16,7 +18,6 @@ enum Status { initial, success, error, loading }
 class IngredientiProvider extends ChangeNotifier {
   Status _statusAllIngredienti = Status.initial;
   Status _statusIngredientiPreferiti = Status.initial;
-
   List<IngredientiModel> _ingredientiPreferiti = [];
   List<IngredientiModel> _allIngredienti = [];
   List<IngredientiModel> _allIngredientiFiltrati = [];
@@ -26,6 +27,9 @@ class IngredientiProvider extends ChangeNotifier {
   List<IngredientiModel> get ingredientiPreferiti => _ingredientiPreferiti;
   List<IngredientiModel> get allIngredienti => _allIngredienti;
   List<IngredientiModel> get allIngredientiFiltrati => _allIngredientiFiltrati;
+
+  bool get statusSuccess => _statusAllIngredienti == Status.success;
+  bool get statusLoading => _statusAllIngredienti == Status.loading;
 
   getAllIngredienti() async {
     _statusAllIngredienti = Status.loading;
@@ -74,6 +78,11 @@ class IngredientiProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  resetList() {
+    _allIngredientiFiltrati = _allIngredienti;
+    // notifyListeners();
+  }
+
   saveIngredientePreferito(IngredientiModel ingrediente) async {
     if (!_ingredientiPreferiti.contains(ingrediente)) {
       _ingredientiPreferiti.insert(0, ingrediente);
@@ -110,7 +119,6 @@ class IngredientiProvider extends ChangeNotifier {
             image:
                 "https://www.thecocktaildb.com/images/ingredients/$newNameImage-Small.png"),
       );
-      print(allIngredientiWithImage);
     });
     return allIngredientiWithImage;
   }
